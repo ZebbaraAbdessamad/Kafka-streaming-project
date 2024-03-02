@@ -1,0 +1,92 @@
+<!-- templates/order_messages.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kafka Order Messages</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #3494e6, #ec6ead);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #f2f2f2;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin: 10px 0;
+            padding: 16px;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 14px;
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            background-color: #07096f;
+            color: #fff;
+            border-radius: 6px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        function updateOrderMessages() {
+            $.get('/get_order_messages', function(data) {
+                var ul = $('#order-message-list');
+                ul.empty();
+                data.messages.forEach(function(message) {
+                    var formattedMessage = formatOrderMessage(message);
+                    var li = $('<li>').text(formattedMessage);
+                    ul.append(li);
+                });
+            });
+        }
+
+        function formatOrderMessage(message) {
+            // Extract specific information and format the message
+            var orderId = 'Order ID: ' + message.order_id;
+            var items = 'Items: ' + message.items;
+            var totalCost = 'Total Cost: ' + message.total_cost;
+            var userId = 'User ID: ' + message.user_id;
+            return  '🍔'+ orderId + ', ' + items + ', ' + totalCost + ', ' + userId ;
+        }
+
+        // Periodically update order messages every 2 seconds
+        setInterval(updateOrderMessages, 2000);
+    </script>
+</head>
+
+<body>
+    <h1>Kafka Order Messages</h1>
+    <ul id="order-message-list">
+    </ul>
+    <div class="button-container">
+        <a class="back-button" href="{{ url_for('home') }}">Back to Home</a>
+    </div>
+</body>
+
+</html>

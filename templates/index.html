@@ -1,0 +1,66 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kafka Real-Time App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #3494e6, #ec6ead);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 80vh;
+        }
+
+        h1 {
+            color: #f2f2f2;
+        }
+
+        table {
+            width: 50%;
+            text-align: center;
+            margin-top: 20px;
+            padding: 30px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        td{
+            padding: 12px;
+        }
+        tr {
+            margin: 10px 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    
+    </style>
+</head>
+<body>
+    <img src="static/kafka-food2.png" alt="Sample Image">
+    <h1>Real-Time Food Ordering with Kafka</h1>
+    <table>
+        <tr>
+            <td><button><a href="{{ url_for('listen_order') }}">Listen to Order Messages</a></button></td>
+            <td><button><a href="{{ url_for('listen_confirmation') }}">Listen to Confirmation Messages</a></button></td>
+        </tr>
+        <tr>
+            <td><button><a href="{{ url_for('analytics') }}">View Analytics</a></button></td>
+            <td><button><a href="{{ url_for('produce') }}">Produce Orders</a></button></td>
+        </tr>
+    </table>
+</body>
+</html>

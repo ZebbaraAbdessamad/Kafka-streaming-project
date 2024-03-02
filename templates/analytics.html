@@ -1,0 +1,119 @@
+<!-- templates/analytics_data.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Data</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #3494e6, #ec6ead);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #eeeeee;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 50%;
+            margin-top: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 14px;
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            background-color: #07096f;
+            color: #fff;
+            border-radius: 6px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        function updateAnalytics() {
+            $.ajax({
+                url: '/get_analytics_data',
+                method: 'GET',
+                success: function(data) {
+                    updateTable(data);
+                    setTimeout(updateAnalytics, 5000); // Poll every 5 seconds
+                },
+                error: function(error) {
+                    console.log('Error fetching analytics data:', error);
+                    setTimeout(updateAnalytics, 5000); // Retry after 5 seconds on error
+                }
+            });
+        }
+
+        function updateTable(data) {
+            var analyticsTable = $('#analytics-table');
+            analyticsTable.empty();
+
+            // Display total confirmed orders
+            analyticsTable.append('<tr><th>Total Confirmed Orders</th><td>' + data.total_orders + '</td></tr>');
+
+            // Display item type breakdown
+            analyticsTable.append('<tr><th colspan="2">Item Type Breakdown</th></tr>');
+            analyticsTable.append('<tr><td>Burger</td><td>' + data.burger_count + '</td></tr>');
+            analyticsTable.append('<tr><td>Pizza</td><td>' + data.pizza_count + '</td></tr>');
+
+             // Display percentage breakdown
+             var totalPercentage = data.burger_count + data.pizza_count > 0
+                ? ((data.burger_count / (data.burger_count + data.pizza_count)) * 100).toFixed(2)
+                : 0;
+            analyticsTable.append('<tr><td>Percentage (Burger)</td><td>' + totalPercentage + '%</td></tr>');
+            analyticsTable.append('<tr><td>Percentage (Pizza)</td><td>' + (100 - totalPercentage).toFixed(2) + '%</td></tr>');
+        }
+
+        $(document).ready(function() {
+            updateAnalytics();
+        });
+    </script>
+</head>
+
+<body>
+    <h1>Analytics Data</h1>
+    <table id="analytics-table">
+        <!-- Analytics data will be displayed here -->
+    </table>
+    <div class="button-container">
+        <a class="back-button" href="{{ url_for('home') }}">Back to Home</a>
+    </div>
+</body>
+
+</html>
